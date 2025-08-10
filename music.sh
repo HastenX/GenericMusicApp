@@ -1,15 +1,19 @@
-appPath=/home/$USER/Documents/GitHub/GenericMusicApp
-almbumDir="/home/$USER/Music/GenericMusicAppSongs/Albums"
+if [[ $runSongsVisible == "" ]]; then
+    source "$appPath/runningSongs.sh"
+fi
 
-source "/home/$USER/Documents/GitHub/GenericMusicApp/runningSongs.sh"
-
-function music() {
+function song_selector() {
     clear
+    echo "Current audio device: $(pactl get-default-sink)"
+    echo ---------------------------------------
     echo You are now in a generic song selector:
     echo ---------------------------------------
     echo "Please select Albums (1) or Playlists (2)"
     read selection
     echo ---------------------------------------
+    if [ "$selction" = "exit" ]; then
+        exit
+    fi
     if [ "$selection" = "1" ]; then
         i=0
         choices=()
@@ -24,6 +28,9 @@ function music() {
         echo Please select an Album
         read albumSelection
         echo ---------------------------------------
+        if [ "$albumSelction" = "exit" ]; then
+            exit
+        fi
         albumSelection=${choices[$(($albumSelection-1))]}
         clear
         runningSongs "$albumSelection" 
@@ -43,11 +50,14 @@ function music() {
         echo Please select a Playlist
         read playlistSelection
         echo ---------------------------------------
+        if [ "$playlistSelction" = "exit" ]; then
+            exit
+        fi
         playlistSelection=${choices[$(($playlistSelection-1))]}
         clear
         runningSongs "$playlistSelection"
     else
         echo "Please enter a viable response!"
-        music
+         music
     fi
 }
